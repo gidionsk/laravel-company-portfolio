@@ -6,16 +6,23 @@ FROM php:8.2-cli-bookworm AS php-deps
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        git \
-        unzip \
         libicu-dev \
         libonig-dev \
         libzip-dev \
+        unzip \
     && docker-php-ext-install -j"$(nproc)" \
         intl \
         mbstring \
+        pdo_mysql \
+        opcache \
         zip \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -f \
+        /etc/apache2/mods-enabled/mpm_event.load \
+        /etc/apache2/mods-enabled/mpm_event.conf \
+        /etc/apache2/mods-enabled/mpm_worker.load \
+        /etc/apache2/mods-enabled/mpm_worker.conf \
+    && a2enmod mpm_prefork \
+    && a2enmod rewrite headers \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
