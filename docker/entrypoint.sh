@@ -52,6 +52,8 @@ chown -R www-data:www-data storage bootstrap/cache
 
 php artisan storage:link >/dev/null 2>&1 || true
 
+echo "Clearing Laravel configuration cache..."
+php artisan config:clear
 
 # =========================================================
 # Database
