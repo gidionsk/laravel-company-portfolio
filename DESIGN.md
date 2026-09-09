@@ -15,7 +15,7 @@ The design is editorial and restrained. It should feel like a developer or produ
 - Do not use invented metrics, client logos, testimonials, or business claims.
 - Demo projects must be labelled `Concept case study`.
 - Prefer text links with explicit labels over decorative arrow glyphs.
-- Motion is limited to functional navigation transitions. Content must remain readable with JavaScript disabled.
+- Motion may reinforce hierarchy and state, but stays finite and restrained: short entrance reveals, ledger sequencing, filter feedback, and subtle hover response. No looping decoration, parallax, cursor-following effects, or autoplay carousels. Content must remain readable with JavaScript disabled.
 
 ## Content rules
 
@@ -33,6 +33,16 @@ Do not publish a testimonial unless it comes from a real person who approved the
 
 ## Layout rhythm
 
-Energy: 2/5. Rhythm: 3/5. Motion: 1/5.
+Energy: 2/5. Rhythm: 3/5. Motion: 2/5.
 
 Sections use generous whitespace, clear dividers, and alternating text/image or text/list structures instead of bento grids and repeated equal-weight cards.
+
+
+## Motion rules
+
+- Entrance travel stays around 14 pixels and under half a second.
+- Reveal each content block once; do not replay on every scroll pass.
+- Stagger only tightly related items, such as implementation-ledger rows.
+- Hover motion is limited to 1 to 4 pixels and must correspond to an interactive element.
+- `prefers-reduced-motion: reduce` removes reveal movement and filter animation.
+- Never hide essential content in the no-JavaScript state.
