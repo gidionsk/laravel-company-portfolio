@@ -30,6 +30,7 @@ class Project extends Model
         'sort_order',
         'is_featured',
         'is_published',
+        'is_concept',
     ];
 
     protected $casts = [
@@ -39,6 +40,7 @@ class Project extends Model
         'sort_order' => 'integer',
         'is_featured' => 'boolean',
         'is_published' => 'boolean',
+        'is_concept' => 'boolean',
     ];
 
     public function coverImageUrl(): ?string

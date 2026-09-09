@@ -1,21 +1,21 @@
-@extends('layouts.admin', ['title' => 'Dashboard — Admin'])
+@extends('layouts.admin', ['title' => 'Dashboard | Admin'])
 
 @section('content')
 <div class="admin-page-head">
-    <div><small>OVERVIEW</small><h1>Dashboard</h1><p>Ringkasan website dan aktivitas inquiry terbaru.</p></div>
-    <a href="{{ route('admin.projects.create') }}" class="admin-primary-btn">+ New project</a>
+    <div><small>Overview</small><h1>Dashboard</h1><p>Current content status and recent inquiry activity.</p></div>
+    <a href="{{ route('admin.projects.create') }}" class="admin-primary-btn">New project</a>
 </div>
 
-<div class="admin-stat-grid">
-    <article><span>Total projects</span><strong>{{ $stats['projects'] }}</strong><small>{{ $stats['published'] }} published</small></article>
-    <article><span>Active services</span><strong>{{ $stats['services'] }}</strong><small>Shown on homepage</small></article>
-    <article><span>New inquiries</span><strong>{{ $stats['new_messages'] }}</strong><small>Need attention</small></article>
-    <article><span>Website</span><strong class="status-online">Live</strong><small>Public pages enabled</small></article>
+<div class="admin-summary-list" aria-label="Content status">
+    <article><span>Projects</span><strong>{{ $stats['projects'] }}</strong><small>{{ $stats['published'] }} published</small></article>
+    <article><span>Services</span><strong>{{ $stats['services'] }}</strong><small>Active on the homepage</small></article>
+    <article><span>New inquiries</span><strong>{{ $stats['new_messages'] }}</strong><small>Waiting in the inbox</small></article>
+    <article><span>Public site</span><strong class="status-online">Online</strong><small>Health and deployment are monitored outside this panel</small></article>
 </div>
 
 <div class="admin-two-col">
     <section class="admin-panel">
-        <div class="admin-panel-head"><div><small>RECENT</small><h2>Messages</h2></div><a href="{{ route('admin.messages.index') }}">View all →</a></div>
+        <div class="admin-panel-head"><div><small>Recent</small><h2>Messages</h2></div><a href="{{ route('admin.messages.index') }}">View all</a></div>
         <div class="admin-list">
             @forelse($messages as $message)
                 <a href="{{ route('admin.messages.show', $message) }}" class="admin-list-row">
@@ -29,7 +29,7 @@
     </section>
 
     <section class="admin-panel">
-        <div class="admin-panel-head"><div><small>LATEST</small><h2>Projects</h2></div><a href="{{ route('admin.projects.index') }}">Manage →</a></div>
+        <div class="admin-panel-head"><div><small>Latest</small><h2>Projects</h2></div><a href="{{ route('admin.projects.index') }}">Manage</a></div>
         <div class="admin-list">
             @forelse($projects as $project)
                 <a href="{{ route('admin.projects.edit', $project) }}" class="admin-list-row">

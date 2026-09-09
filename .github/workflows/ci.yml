@@ -15,7 +15,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: '8.2'
           extensions: mbstring, intl, pdo_sqlite, sqlite3
           coverage: none
 
@@ -39,11 +39,11 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      - name: Run migrations and tests
+      - name: Run tests
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
-          CACHE_STORE: array
+          CACHE_DRIVER: array
           SESSION_DRIVER: array
           QUEUE_CONNECTION: sync
           PORTFOLIO_SEED_DEMO: 'true'

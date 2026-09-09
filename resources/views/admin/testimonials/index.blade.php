@@ -1,6 +1,6 @@
-@extends('layouts.admin', ['title' => 'Testimonials — Admin'])
+@extends('layouts.admin', ['title' => 'Testimonials | Admin'])
 @section('content')
-<div class="admin-page-head"><div><small>CONTENT</small><h1>Testimonials</h1><p>Kelola social proof yang tampil pada website.</p></div><a href="{{ route('admin.testimonials.create') }}" class="admin-primary-btn">+ Add testimonial</a></div>
+<div class="admin-page-head"><div><small>Content</small><h1>Testimonials</h1><p>Only publish quotes from real people who approved the wording. Demo testimonials are kept inactive.</p></div><a href="{{ route('admin.testimonials.create') }}" class="admin-primary-btn">Add testimonial</a></div>
 <div class="admin-card-grid">
     @forelse($testimonials as $testimonial)
         <article class="admin-quote-card">

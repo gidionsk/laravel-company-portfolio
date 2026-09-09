@@ -1,262 +1,84 @@
-# Production Deployment Guide
+# Production deployment
 
-Rekomendasi paling praktis untuk portfolio ini adalah **GitHub → Railway → MySQL**, menggunakan `Dockerfile` yang sudah tersedia. Setup yang sama juga bisa dijalankan di VPS/container host lain.
+The current production target is GitHub, Railway, and Railway MySQL.
 
----
+## Railway application variables
 
-# A. Final check di laptop
-
-Pastikan semua perubahan V4 sudah masuk ke root Laravel.
-
-```powershell
-php artisan optimize:clear
-php artisan migrate
-npm install
-npm run build
-php artisan test
-```
-
-Pastikan semua test sukses.
-
-Generate production key:
-
-```powershell
-php artisan key:generate --show
-```
-
-Copy hasil `base64:...`. Jangan mengganti `APP_KEY` production setelah website sudah memiliki encrypted data/session.
-
----
-
-# B. Push ke GitHub
-
-Dari root project:
-
-```powershell
-git init
-git add .
-git commit -m "Prepare portfolio for production"
-git branch -M main
-```
-
-Buat repository GitHub kosong lalu hubungkan remote:
-
-```powershell
-git remote add origin <repository-git-url>
-git push -u origin main
-```
-
-Pastikan `.env` tidak ikut ter-commit.
-
----
-
-# C. Deploy ke Railway
-
-## 1. Buat project
-
-Di Railway:
-
-1. New Project.
-2. Deploy from GitHub Repo.
-3. Pilih repository portfolio.
-4. Railway akan menemukan `Dockerfile` di root dan menggunakannya untuk build.
-
-Jangan generate public domain dulu sampai database dan environment variables selesai.
-
-## 2. Tambahkan MySQL
-
-Pada project canvas yang sama:
-
-1. `+ New`
-2. Pilih MySQL.
-3. Tunggu database selesai dibuat.
-
-## 3. Hubungkan environment variable web service ke MySQL
-
-Nama service database Railway biasanya `MySQL`. Jika kamu mengganti nama service, sesuaikan namespace reference di bawah.
-
-Tambahkan pada **Variables** web service:
+Use the Laravel service Variables tab. The MySQL service in this project is named `MySQL`.
 
 ```env
+APP_NAME="Portfolio Demo"
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:replace-with-real-key
+APP_URL=https://your-service.up.railway.app
+
+LOG_CHANNEL=stderr
+LOG_LEVEL=warning
+
 DB_CONNECTION=mysql
 DB_HOST=${{MySQL.MYSQLHOST}}
 DB_PORT=${{MySQL.MYSQLPORT}}
 DB_DATABASE=${{MySQL.MYSQLDATABASE}}
 DB_USERNAME=${{MySQL.MYSQLUSER}}
 DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
-```
 
-Gunakan Reference Variables, jangan copy credential database secara manual bila tidak diperlukan.
+SESSION_DRIVER=file
+CACHE_DRIVER=file
+QUEUE_CONNECTION=sync
 
-## 4. Tambahkan application variables
-
-```env
-APP_NAME=Portfolio Demo
-APP_ENV=production
-APP_DEBUG=false
-APP_KEY=base64:HASIL_DARI_KEY_GENERATE
-LOG_LEVEL=warning
-
-ADMIN_EMAIL=email-admin-kamu
-ADMIN_PASSWORD=password-random-yang-panjang
-
-SESSION_DRIVER=database
-SESSION_ENCRYPT=true
-SESSION_SECURE_COOKIE=true
-CACHE_STORE=database
-QUEUE_CONNECTION=database
-
+FILESYSTEM_DISK=public
 PORTFOLIO_MEDIA_DISK=public
-PORTFOLIO_SEED_DEMO=true
+
 RUN_MIGRATIONS=true
-RUN_SEEDER=true
+RUN_SEEDER=false
+PORTFOLIO_SEED_DEMO=false
 ```
 
-`APP_URL` diisi setelah Railway public domain tersedia.
+Use a real `APP_KEY`. Generate one locally with:
 
-## 5. Persistent media volume
-
-Jika ingin upload cover/gallery lewat admin dan tetap tersimpan setelah redeploy, tambahkan Volume ke **web service** dengan mount path:
-
-```text
-/var/www/html/storage/app/public
+```powershell
+php artisan key:generate --show
 ```
 
-Tanpa volume, file yang di-upload ke local filesystem container bisa hilang saat deployment diganti.
+## Deploy an update
 
-Database MySQL Railway dikelola sebagai service terpisah; jangan mount volume MySQL ke web service.
+```powershell
+git add .
+git commit -m "Apply anti-slop portfolio redesign"
+git push origin main
+```
 
-## 6. Health check
+Railway will build the Docker image and deploy the new revision. The entrypoint runs migrations when `RUN_MIGRATIONS=true`.
 
-Di Settings web service, set health check path:
+## Health check
+
+Set Railway's health-check path to:
 
 ```text
 /health
 ```
 
-Deployment baru baru dianggap sehat jika endpoint ini mengembalikan HTTP 200 dan koneksi database berhasil.
+A healthy response confirms that the application can also reach MySQL.
 
-## 7. Generate domain
+## Persistent uploads
 
-Setelah deployment berhasil:
-
-1. Settings → Networking.
-2. Generate Domain.
-3. Copy domain Railway, misalnya `xxxxx.up.railway.app`.
-
-Set:
-
-```env
-APP_URL=https://xxxxx.up.railway.app
-```
-
-Railway akan redeploy.
-
-## 8. Matikan seeder setelah deploy pertama
-
-Setelah homepage dan admin berhasil dibuka, ubah:
-
-```env
-RUN_SEEDER=false
-```
-
-Biarkan:
-
-```env
-RUN_MIGRATIONS=true
-```
-
-untuk project portfolio single-instance sederhana. Untuk scale >1 replica gunakan migration sebagai release step dan matikan runtime migration.
-
-## 9. Admin
-
-Buka:
+Mount the web-service volume at:
 
 ```text
-https://domain-kamu/admin/login
+/var/www/html/storage/app/public
 ```
 
-Login memakai `ADMIN_EMAIL` / `ADMIN_PASSWORD` yang dipakai ketika seeder dijalankan.
+Without a persistent volume, locally stored project uploads can disappear when the container is replaced.
 
-Jika kamu mengubah credential env setelah admin sudah dibuat, menjalankan seeder lagi akan meng-update password user tersebut.
+## After this redesign
 
----
+The new migrations:
 
-# D. Custom domain
+1. Add `projects.is_concept`.
+2. Mark the bundled demo projects as concept case studies.
+3. Remove demo client names and metrics from those records.
+4. Disable the three old fictional demo testimonials.
+5. Rewrite the default service and homepage copy around features that actually exist.
 
-Setelah Railway domain bekerja:
-
-1. Tambahkan custom domain di Networking.
-2. Ikuti DNS record yang diberikan Railway.
-3. Setelah SSL aktif, ubah:
-
-```env
-APP_URL=https://domain-kamu.com
-```
-
-Pastikan:
-
-```env
-SESSION_SECURE_COOKIE=true
-```
-
----
-
-# E. VPS / Docker alternatif
-
-Docker image yang sama bisa digunakan pada VPS.
-
-Build:
-
-```bash
-docker build -t company-portfolio:latest .
-```
-
-Run contoh:
-
-```bash
-docker run -d \
-  --name company-portfolio \
-  -p 8080:8080 \
-  --env-file .env.production \
-  -e PORT=8080 \
-  -e RUN_MIGRATIONS=true \
-  -v portfolio-media:/var/www/html/storage/app/public \
-  company-portfolio:latest
-```
-
-Database sebaiknya MySQL terpisah/managed, bukan database ephemeral di container aplikasi.
-
-Reverse proxy (Nginx/Caddy/Cloudflare) dapat diarahkan ke port 8080 dan menangani HTTPS.
-
----
-
-# F. Setelah production online
-
-Checklist singkat:
-
-- `APP_DEBUG=false`.
-- `/health` HTTP 200.
-- Homepage dan `/projects` dapat dibuka.
-- Draft project mengembalikan 404 dari public URL.
-- `/admin` meminta login.
-- Login gagal berulang terkena rate limit.
-- Contact form berhasil masuk ke admin Messages.
-- `/sitemap.xml` dapat dibuka.
-- `/robots.txt` dapat dibuka.
-- Upload gambar tetap ada setelah redeploy/restart.
-- Backup MySQL dan volume media aktif.
-
----
-
-# G. Update berikutnya
-
-Workflow normal setelah production:
-
-```powershell
-git add .
-git commit -m "Update portfolio content"
-git push
-```
-
-Railway akan melakukan build/deploy dari commit baru. `Dockerfile` menjalankan Vite production build, Composer `--no-dev`, OPcache, dan `php artisan optimize`.
+The migrations do not alter unrelated user-created project records.

@@ -6,7 +6,6 @@ use App\Models\ContactMessage;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\SiteSetting;
-use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -23,9 +22,7 @@ class CompanyController extends Controller
             ->orderBy('sort_order')
             ->limit(6)
             ->get();
-        $testimonials = Testimonial::query()->where('is_active', true)->orderBy('sort_order')->get();
-
-        return view('home', compact('settings', 'services', 'projects', 'testimonials'));
+        return view('home', compact('settings', 'services', 'projects'));
     }
 
     public function contact(Request $request): RedirectResponse
@@ -43,6 +40,6 @@ class CompanyController extends Controller
         unset($validated['website']);
         ContactMessage::create($validated);
 
-        return back()->with('success', 'Pesan berhasil dikirim. Tim kami akan segera menghubungi Anda.');
+        return back()->with('success', 'Pesan berhasil dikirim dan sudah masuk ke inbox demo.');
     }
 }

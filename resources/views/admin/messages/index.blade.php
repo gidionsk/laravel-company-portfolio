@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['title' => 'Messages — Admin'])
+@extends('layouts.admin', ['title' => 'Messages | Admin'])
 @section('content')
 <div class="admin-page-head"><div><small>INQUIRIES</small><h1>Messages</h1><p>Semua inquiry yang masuk dari contact form website.</p></div></div>
 <div class="admin-filter-row">
@@ -12,7 +12,7 @@
     @forelse($messages as $message)
         <tr>
             <td><strong>{{ $message->name }}</strong><small class="table-subtext">{{ $message->email }}</small></td>
-            <td>{{ $message->company ?: '—' }}</td><td>{{ $message->budget ?: '—' }}</td>
+            <td>{{ $message->company ?: 'Not set' }}</td><td>{{ $message->budget ?: 'Not set' }}</td>
             <td><span class="admin-badge status-{{ $message->status }}">{{ $message->status }}</span></td>
             <td>{{ $message->created_at->format('d M Y, H:i') }}</td>
             <td class="admin-actions"><a href="{{ route('admin.messages.show', $message) }}">Open</a></td>

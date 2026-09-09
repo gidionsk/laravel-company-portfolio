@@ -29,6 +29,12 @@ class ProjectController extends Controller
         $data['slug'] = $this->uniqueSlug($data['title']);
         $data['is_featured'] = $request->boolean('is_featured');
         $data['is_published'] = $request->boolean('is_published');
+        $data['is_concept'] = $request->boolean('is_concept');
+        if ($data['is_concept']) {
+            $data['client_name'] = null;
+            $data['metric'] = null;
+            $data['metric_label'] = null;
+        }
         $data['tags'] = $this->tags($request->input('tags_text'));
         $data['gallery_images'] = [];
 
@@ -60,6 +66,12 @@ class ProjectController extends Controller
         }
         $data['is_featured'] = $request->boolean('is_featured');
         $data['is_published'] = $request->boolean('is_published');
+        $data['is_concept'] = $request->boolean('is_concept');
+        if ($data['is_concept']) {
+            $data['client_name'] = null;
+            $data['metric'] = null;
+            $data['metric_label'] = null;
+        }
         $data['tags'] = $this->tags($request->input('tags_text'));
 
         if ($request->hasFile('cover_image')) {

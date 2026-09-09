@@ -1,11 +1,11 @@
-@extends('layouts.admin', ['title' => 'Message from '.$message->name.' — Admin'])
+@extends('layouts.admin', ['title' => 'Message from '.$message->name.' | Admin'])
 @section('content')
-<div class="admin-page-head"><div><small>INQUIRY</small><h1>{{ $message->name }}</h1><p>{{ $message->email }} · {{ $message->created_at->format('d M Y, H:i') }}</p></div><a href="{{ route('admin.messages.index') }}" class="admin-secondary-btn">← Back</a></div>
+<div class="admin-page-head"><div><small>INQUIRY</small><h1>{{ $message->name }}</h1><p>{{ $message->email }} · {{ $message->created_at->format('d M Y, H:i') }}</p></div><a href="{{ route('admin.messages.index') }}" class="admin-secondary-btn">Back</a></div>
 <div class="admin-form-grid">
     <section class="admin-panel admin-message-detail">
-        <div class="admin-message-meta"><div><span>Company</span><strong>{{ $message->company ?: '—' }}</strong></div><div><span>Phone</span><strong>{{ $message->phone ?: '—' }}</strong></div><div><span>Budget</span><strong>{{ $message->budget ?: '—' }}</strong></div></div>
+        <div class="admin-message-meta"><div><span>Company</span><strong>{{ $message->company ?: 'Not set' }}</strong></div><div><span>Phone</span><strong>{{ $message->phone ?: 'Not set' }}</strong></div><div><span>Budget</span><strong>{{ $message->budget ?: 'Not set' }}</strong></div></div>
         <div class="admin-message-body"><span>MESSAGE</span><p>{!! nl2br(e($message->message)) !!}</p></div>
-        <div class="admin-message-actions"><a class="admin-primary-btn" href="mailto:{{ $message->email }}?subject=Re: Your inquiry">Reply by email ↗</a>@if($message->phone)<a class="admin-secondary-btn" href="https://wa.me/{{ preg_replace('/\D+/', '', $message->phone) }}" target="_blank" rel="noreferrer">WhatsApp ↗</a>@endif</div>
+        <div class="admin-message-actions"><a class="admin-primary-btn" href="mailto:{{ $message->email }}?subject=Re: Your inquiry">Reply by email</a>@if($message->phone)<a class="admin-secondary-btn" href="https://wa.me/{{ preg_replace('/\D+/', '', $message->phone) }}" target="_blank" rel="noreferrer">WhatsApp</a>@endif</div>
     </section>
     <aside class="admin-form-side">
         <section class="admin-panel admin-form-section">
