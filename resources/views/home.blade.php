@@ -18,17 +18,18 @@
             </dl>
         </div>
 
-        <aside class="implementation-ledger" aria-label="Implemented features">
-            <div class="ledger-head">
-                <span>Implementation ledger</span>
-                <strong>Public demo</strong>
+        <aside class="hero-visual-stage" aria-label="Portfolio interface preview">
+            <figure class="visual-frame hero-product-preview">
+                <img src="{{ asset('images/visuals/hero-workbench.svg') }}" alt="Illustrated preview of the public portfolio and admin CMS" width="1200" height="840">
+                <figcaption><span>Working interface</span><strong>Public site + authenticated CMS</strong></figcaption>
+            </figure>
+
+            <div class="implementation-ledger implementation-ledger-compact" aria-label="Implemented features">
+                <div class="ledger-head"><span>Implementation ledger</span><strong>Live build</strong></div>
+                <div class="ledger-row"><span>Public</span><b>Blade views + case studies</b></div>
+                <div class="ledger-row"><span>Admin</span><b>CMS + contact inbox</b></div>
+                <div class="ledger-row"><span>Production</span><b>MySQL + Docker + Railway</b></div>
             </div>
-            <div class="ledger-row"><span>Public site</span><b>Responsive Blade views</b></div>
-            <div class="ledger-row"><span>Content</span><b>Projects, services, settings</b></div>
-            <div class="ledger-row"><span>Admin</span><b>CMS + authenticated routes</b></div>
-            <div class="ledger-row"><span>Inbox</span><b>Database-backed contact flow</b></div>
-            <div class="ledger-row"><span>Deploy</span><b>Docker + health check</b></div>
-            <div class="ledger-note">Everything listed here exists in the repository. Concept project outcomes are intentionally not presented as real client results.</div>
         </aside>
     </div>
 </section>
@@ -49,6 +50,29 @@
         <div><span>01</span><strong>Public portfolio</strong><p>Homepage, project archive, case-study detail, SEO metadata, sitemap, and responsive navigation.</p></div>
         <div><span>02</span><strong>Content management</strong><p>Authenticated project, service, testimonial, settings, and inquiry management.</p></div>
         <div><span>03</span><strong>Production setup</strong><p>MySQL, Docker, persistent media support, security headers, rate limiting, and health checks.</p></div>
+    </div>
+</section>
+
+<section class="section selected-screens" aria-labelledby="selected-screens-title">
+    <div class="container section-top selected-screens-head">
+        <div><p class="section-kicker">Selected screens</p></div>
+        <div><h2 id="selected-screens-title">Interface work should be visible, not just described.</h2><p class="section-lead">These are purpose-built concept screens for the demo. They show the kind of hierarchy, density, and responsive product surfaces represented by the case studies.</p></div>
+    </div>
+    <div class="container screen-editorial-grid">
+        <figure class="selected-screen selected-screen-wide">
+            <div class="screen-media"><img src="{{ asset('images/visuals/admin-cms.svg') }}" alt="Concept preview of the portfolio admin CMS" width="1200" height="840" loading="lazy"></div>
+            <figcaption><span>01 / System</span><strong>Authenticated content management</strong><p>Projects, inbox, services, and settings share one restrained admin language.</p></figcaption>
+        </figure>
+        <div class="selected-screen-stack">
+            <figure class="selected-screen">
+                <div class="screen-media"><img src="{{ asset('images/visuals/nexa-finance.svg') }}" alt="Concept mobile banking interface for Nexa Finance" width="1200" height="840" loading="lazy"></div>
+                <figcaption><span>02 / Product concept</span><strong>Nexa Finance</strong><p>A calmer transfer and account hierarchy.</p></figcaption>
+            </figure>
+            <figure class="selected-screen">
+                <div class="screen-media"><img src="{{ asset('images/visuals/flowdesk.svg') }}" alt="Concept productivity workspace interface for FlowDesk" width="1200" height="840" loading="lazy"></div>
+                <figcaption><span>03 / Product concept</span><strong>FlowDesk</strong><p>A task surface built around the next action.</p></figcaption>
+            </figure>
+        </div>
     </div>
 </section>
 
@@ -90,12 +114,16 @@
                 <a href="{{ route('projects.show', $project) }}" class="project-visual project-{{ $project->theme }} {{ $project->cover_image ? 'has-cover' : '' }}"
                    @if($project->cover_image) style="background-image:url('{{ $project->coverImageUrl() }}')" @endif>
                     @unless($project->cover_image)
-                        <div class="concept-canvas">
-                            <span>{{ $project->is_concept ? 'Concept case study' : 'Project case study' }}</span>
-                            <strong>{{ $project->title }}</strong>
-                            <small>{{ $project->category ?? 'Product concept' }}</small>
-                            <div class="concept-tags">@foreach(array_slice($project->tags ?? [], 0, 3) as $tag)<i>{{ $tag }}</i>@endforeach</div>
-                        </div>
+                        @if(in_array($project->slug, ['nexa-finance','aruna-living','flowdesk','vanta-commerce']))
+                            <img class="project-concept-image" src="{{ asset('images/visuals/'.$project->slug.'.svg') }}" alt="{{ $project->title }} concept interface preview" width="1200" height="840" loading="lazy">
+                        @else
+                            <div class="concept-canvas">
+                                <span>{{ $project->is_concept ? 'Concept case study' : 'Project case study' }}</span>
+                                <strong>{{ $project->title }}</strong>
+                                <small>{{ $project->category ?? 'Product concept' }}</small>
+                                <div class="concept-tags">@foreach(array_slice($project->tags ?? [], 0, 3) as $tag)<i>{{ $tag }}</i>@endforeach</div>
+                            </div>
+                        @endif
                     @endunless
                     <span class="project-open">Read case study</span>
                 </a>

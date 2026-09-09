@@ -31,11 +31,13 @@ const setupMotion = () => {
 
     const revealGroups = [
         '.hero-copy',
+        '.hero-visual-stage',
         '.implementation-ledger',
         '.section-heading',
         '.about-copy',
         '.capability-table > div',
         '.section-top > *',
+        '.selected-screen',
         '.service-row',
         '.project-card',
         '.process-list article',

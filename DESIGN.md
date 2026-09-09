@@ -46,3 +46,9 @@ Sections use generous whitespace, clear dividers, and alternating text/image or 
 - Hover motion is limited to 1 to 4 pixels and must correspond to an interactive element.
 - `prefers-reduced-motion: reduce` removes reveal movement and filter animation.
 - Never hide essential content in the no-JavaScript state.
+
+## V5.2 visual layer
+
+The public portfolio uses purpose-built interface illustrations instead of decorative stock imagery. Visuals are treated as evidence of product thinking: browser-like frames, CMS surfaces, and concept product screens. They never present fabricated business results.
+
+Motion: 2.5/5. Hero and selected-screen visuals enter once, with short finite transitions. No parallax, cursor effects, infinite loops, or ambient motion.

@@ -23,12 +23,16 @@
                 <article class="project-card" data-project-item data-category="{{ \Illuminate\Support\Str::slug($project->category ?? '') }}">
                     <a href="{{ route('projects.show', $project) }}" class="project-visual project-{{ $project->theme }} {{ $project->cover_image ? 'has-cover' : '' }}" @if($project->cover_image) style="background-image:url('{{ $project->coverImageUrl() }}')" @endif>
                         @unless($project->cover_image)
-                            <div class="concept-canvas">
-                                <span>{{ $project->is_concept ? 'Concept case study' : 'Project case study' }}</span>
-                                <strong>{{ $project->title }}</strong>
-                                <small>{{ $project->category ?? 'Product concept' }}</small>
-                                <div class="concept-tags">@foreach(array_slice($project->tags ?? [], 0, 3) as $tag)<i>{{ $tag }}</i>@endforeach</div>
-                            </div>
+                            @if(in_array($project->slug, ['nexa-finance','aruna-living','flowdesk','vanta-commerce']))
+                                <img class="project-concept-image" src="{{ asset('images/visuals/'.$project->slug.'.svg') }}" alt="{{ $project->title }} concept interface preview" width="1200" height="840" loading="lazy">
+                            @else
+                                <div class="concept-canvas">
+                                    <span>{{ $project->is_concept ? 'Concept case study' : 'Project case study' }}</span>
+                                    <strong>{{ $project->title }}</strong>
+                                    <small>{{ $project->category ?? 'Product concept' }}</small>
+                                    <div class="concept-tags">@foreach(array_slice($project->tags ?? [], 0, 3) as $tag)<i>{{ $tag }}</i>@endforeach</div>
+                                </div>
+                            @endif
                         @endunless
                         <span class="project-open">Read case study</span>
                     </a>
